@@ -28,16 +28,17 @@ class Data(object):
     """
 
     def __init__(self, filename=None, fpointer=None, dataframe=None,
-            names=None, mapfile=None, separator=' ', ranges=None):
+            names=None, mapfile=None, separator=' ', ranges=None, 
+            samps_per_partition=None):
         """
             Constructor and parser.
         """
 
-        self.names = None
-        self.nm2id = None
-        self.samps = None
-        self.wghts = None
-        self.feats = None
+        self.names = None       # guarda as tags de cada coluna ['tag1', ...]
+        self.nm2id = None       # guarda as tags com um id {'tag1': 0, ...}
+        self.samps = None       # guarda as amostras do dataset [(1, 2, 'c'), ...]
+        self.wghts = None       # guarda as frequencias de cada amostra [1, 1, ...]
+        self.feats = None       # guarda os valores unicos de cada coluna [{1, 2}, {1}, ...]
         self.fvmap = None
         self.ovmap = {}
         self.vimap = {}
@@ -118,16 +119,16 @@ class Data(object):
             self.names = names
         else:
             # process names from the dataframe
-            self.names = [name for name in dataframe.columns]
+            self.names = [name for name in dataframe.columns]       # self.names = [DataFrame.columns]
 
         # initialise sets of feature values
-        self.feats = [set([]) for n in self.names]
-
+        self.feats = [set([]) for n in self.names]      # self.feats = [set(), set(), ...] com tamanho len(self.names)
+                                                        # a ideia é preencher cada set() com valores únicos de cada coluna
         # filling name to id mapping
-        self.nm2id = {name: i for i, name in enumerate(self.names)}
+        self.nm2id = {name: i for i, name in enumerate(self.names)}     # self.nm2id = {name0: 0, name1:1, ...} com tamanho len(self.names)
 
         # training samples and their weights to be stored here
-        self.samps, self.wghts = [], []
+        self.samps, self.wghts = [], []     #  ...
 
         if datax:
             # we are dealing with explicit datax and datay
@@ -139,13 +140,13 @@ class Data(object):
             assert type(dataframe) == pandas.DataFrame, 'Unexpected dataframe type'
 
             # extracting the samples
-            samples = []
+            samples = []        # samples = [(amostra0), (amostra1), ..., (amostra n-1)]
             for row in range(len(dataframe)):
                 samples.append(tuple([val for val in dataframe.loc[row]]))
 
         # reading all samples in the weighted manner
-        for sample, w in six.iteritems(collections.Counter(samples)):
-            for i, f in enumerate(sample):
+        for sample, w in six.iteritems(collections.Counter(samples)): # w = frequência da amosta no dataset
+            for i, f in enumerate(sample):      # i E {0, 1, ..., n-1} f = (amostra i)
                 if f:
                     self.feats[i].add(f)
             self.samps.append(sample)

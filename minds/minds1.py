@@ -72,6 +72,8 @@ class MinDS1Rules(SATRules, object):
             # the main part is encoding
             enc = self.encode(nof_terms=nof_terms)
 
+            # ((( self.encode() iterative vai ficar por aqui! )))
+
             if self.options.verb:
                 print('c1 # of terms: {0}; enc: {1}v, {2}c'.format(nof_terms,
                         enc.nv, len(enc.clauses)))

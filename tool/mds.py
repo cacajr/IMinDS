@@ -82,6 +82,8 @@ def do_single_stage(data, options):
 
     covers = solver.compute()
 
+    # ((( solver.compute() iterative vai ficar por aqui! )))
+
     # dealing with default rules (if any)
     if options.verb:
         wghts, label = [], None
