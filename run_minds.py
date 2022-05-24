@@ -1,18 +1,29 @@
 from minds.data import Data
 from minds.options import Options
 from minds.minds1 import MinDS1Rules
+from minds.check import ConsistencyChecker
 
 import six
 
+# instancia Data
 data = Data(filename='./tests/tabela_depressao.csv', separator=',')
 
+# escolhe o modelo
 options = Options()
 options.approach = 'minds1'
 
+# verificação de consistencia
+checker = ConsistencyChecker(data, options)
+if checker.status and checker.do() == False:
+    checker.remove_inconsistent()
+
+# instancia modelo
 solver = MinDS1Rules(data, options)
 
+# aplica a modelagem
 covers = solver.compute()
 
+# mostra as regras
 for label in covers:
     for rule in covers[label]:
         print('rule:', rule)
