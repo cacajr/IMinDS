@@ -28,8 +28,7 @@ class Data(object):
     """
 
     def __init__(self, filename=None, fpointer=None, dataframe=None,
-            names=None, mapfile=None, separator=' ', ranges=None, 
-            samps_per_partition=None):
+            names=None, mapfile=None, separator=' ', ranges=None):
         """
             Constructor and parser.
         """
